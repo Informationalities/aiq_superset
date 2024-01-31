@@ -28,7 +28,7 @@ services:
   redis:
     image: redis:7
     container_name: superset_cache
-    restart: unless-stopped
+    restart: always
     volumes:
       - redis:/data
 
@@ -36,7 +36,7 @@ services:
     env_file: docker/.env-non-dev
     image: postgres:15
     container_name: superset_db
-    restart: unless-stopped
+    restart: always
     volumes:
       - db_home:/var/lib/postgresql/data
       - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
@@ -47,7 +47,7 @@ services:
     container_name: superset_app
     command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
     user: "root"
-    restart: unless-stopped
+    restart: always
     ports:
       - 8088:8088
     depends_on: *superset-depends-on
@@ -69,7 +69,7 @@ services:
     container_name: superset_worker
     command: ["/app/docker/docker-bootstrap.sh", "worker"]
     env_file: docker/.env-non-dev
-    restart: unless-stopped
+    restart: always
     depends_on: *superset-depends-on
     user: "root"
     volumes: *superset-volumes
@@ -85,7 +85,7 @@ services:
     container_name: superset_worker_beat
     command: ["/app/docker/docker-bootstrap.sh", "beat"]
     env_file: docker/.env-non-dev
-    restart: unless-stopped
+    restart: always
     depends_on: *superset-depends-on
     user: "root"
     volumes: *superset-volumes
